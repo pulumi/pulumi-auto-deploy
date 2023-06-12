@@ -5,17 +5,17 @@
 from . import _utilities
 import typing
 # Export this package's modules as members:
+from .auto_deployer import *
 from .provider import *
-from .random import *
 _utilities.register(
     resource_modules="""
 [
  {
-  "pkg": "xyz",
+  "pkg": "auto-deploy",
   "mod": "index",
-  "fqn": "pulumi_xyz",
+  "fqn": "pulumi_auto_deploy",
   "classes": {
-   "xyz:index:Random": "Random"
+   "auto-deploy:index:AutoDeployer": "AutoDeployer"
   }
  }
 ]
@@ -23,9 +23,9 @@ _utilities.register(
     resource_packages="""
 [
  {
-  "pkg": "xyz",
-  "token": "pulumi:providers:xyz",
-  "fqn": "pulumi_xyz",
+  "pkg": "auto-deploy",
+  "token": "pulumi:providers:auto-deploy",
+  "fqn": "pulumi_auto_deploy",
   "class": "Provider"
  }
 ]

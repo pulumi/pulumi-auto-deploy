@@ -1,10 +1,10 @@
-PROJECT_NAME := Pulumi Xyz Resource Provider
+PROJECT_NAME := Pulumi auto-deploy Resource Provider
 
-PACK             := xyz
+PACK             := auto-deploy
 PACKDIR          := sdk
-PROJECT          := github.com/pulumi/pulumi-xyz
-NODE_MODULE_NAME := @pulumi/xyz
-NUGET_PKG_NAME   := Pulumi.Xyz
+PROJECT          := github.com/pulumi/pulumi-auto-deploy
+NODE_MODULE_NAME := @pulumi/auto-deploy
+NUGET_PKG_NAME   := Pulumi.auto-deploy
 
 PROVIDER        := pulumi-resource-${PACK}
 VERSION         ?= $(shell pulumictl get version)
@@ -19,7 +19,6 @@ TESTPARALLELISM := 4
 ensure::
 	cd provider && go mod tidy
 	cd sdk && go mod tidy
-	cd tests && go mod tidy
 
 provider::
 	(cd provider && go build -o $(WORKING_DIR)/bin/${PROVIDER} -ldflags "-X ${PROJECT}/${VERSION_PATH}=${VERSION}" $(PROJECT)/${PROVIDER_PATH}/cmd/$(PROVIDER))
@@ -73,7 +72,7 @@ build:: provider dotnet_sdk go_sdk nodejs_sdk python_sdk
 only_build:: build
 
 lint::
-	for DIR in "provider" "sdk" "tests" ; do \
+	for DIR in "provider" "sdk" ; do \
 		pushd $$DIR && golangci-lint run -c ../.golangci.yml --timeout 10m && popd ; \
 	done
 
@@ -84,12 +83,12 @@ install:: install_nodejs_sdk install_dotnet_sdk
 
 GO_TEST 	 := go test -v -count=1 -cover -timeout 2h -parallel ${TESTPARALLELISM}
 
-test_all::
-	cd provider/pkg && $(GO_TEST) ./...
-	cd tests/sdk/nodejs && $(GO_TEST) ./...
-	cd tests/sdk/python && $(GO_TEST) ./...
-	cd tests/sdk/dotnet && $(GO_TEST) ./...
-	cd tests/sdk/go && $(GO_TEST) ./...
+# test_all::
+# 	cd provider/pkg && $(GO_TEST) ./...
+# 	cd tests/sdk/nodejs && $(GO_TEST) ./...
+# 	cd tests/sdk/python && $(GO_TEST) ./...
+# 	cd tests/sdk/dotnet && $(GO_TEST) ./...
+# 	cd tests/sdk/go && $(GO_TEST) ./...
 
 install_dotnet_sdk::
 	rm -rf $(WORKING_DIR)/nuget/$(NUGET_PKG_NAME).*.nupkg

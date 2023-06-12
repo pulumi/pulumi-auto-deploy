@@ -1,5 +1,5 @@
-import * as xyz from "@pulumi/xyz";
+import * as autodeploy from "@pulumi/auto-deploy";
 
-const random = new xyz.Random("my-random", { length: 24 });
+const random = new autodeploy.Random("my-random", { length: 24 });
 
 export const output = random.result;
