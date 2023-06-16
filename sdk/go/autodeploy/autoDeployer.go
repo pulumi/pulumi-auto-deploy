@@ -14,10 +14,12 @@ import (
 type AutoDeployer struct {
 	pulumi.ResourceState
 
-	DeploymentWebhookURLs pulumi.StringArrayOutput `pulumi:"deploymentWebhookURLs"`
-	Organization          pulumi.StringOutput      `pulumi:"organization"`
-	Project               pulumi.StringOutput      `pulumi:"project"`
-	Stack                 pulumi.StringOutput      `pulumi:"stack"`
+	DownstreamRef      pulumi.StringOutput      `pulumi:"DownstreamRef"`
+	DownstreamWebhooks pulumi.StringArrayOutput `pulumi:"DownstreamWebhooks"`
+	DownstreamRefs     pulumi.StringArrayOutput `pulumi:"downstreamRefs"`
+	Organization       pulumi.StringOutput      `pulumi:"organization"`
+	Project            pulumi.StringOutput      `pulumi:"project"`
+	Stack              pulumi.StringOutput      `pulumi:"stack"`
 }
 
 // NewAutoDeployer registers a new resource with the given unique name, arguments, and options.
@@ -27,8 +29,8 @@ func NewAutoDeployer(ctx *pulumi.Context,
 		return nil, errors.New("missing one or more required arguments")
 	}
 
-	if args.Downstream == nil {
-		return nil, errors.New("invalid value for required argument 'Downstream'")
+	if args.DownstreamRefs == nil {
+		return nil, errors.New("invalid value for required argument 'DownstreamRefs'")
 	}
 	if args.Organization == nil {
 		return nil, errors.New("invalid value for required argument 'Organization'")
@@ -48,18 +50,18 @@ func NewAutoDeployer(ctx *pulumi.Context,
 }
 
 type autoDeployerArgs struct {
-	Downstream   []interface{} `pulumi:"downstream"`
-	Organization string        `pulumi:"organization"`
-	Project      string        `pulumi:"project"`
-	Stack        string        `pulumi:"stack"`
+	DownstreamRefs []string `pulumi:"downstreamRefs"`
+	Organization   string   `pulumi:"organization"`
+	Project        string   `pulumi:"project"`
+	Stack          string   `pulumi:"stack"`
 }
 
 // The set of arguments for constructing a AutoDeployer resource.
 type AutoDeployerArgs struct {
-	Downstream   pulumi.ArrayInput
-	Organization pulumi.StringInput
-	Project      pulumi.StringInput
-	Stack        pulumi.StringInput
+	DownstreamRefs pulumi.StringArrayInput
+	Organization   pulumi.StringInput
+	Project        pulumi.StringInput
+	Stack          pulumi.StringInput
 }
 
 func (AutoDeployerArgs) ElementType() reflect.Type {
@@ -99,8 +101,16 @@ func (o AutoDeployerOutput) ToAutoDeployerOutputWithContext(ctx context.Context)
 	return o
 }
 
-func (o AutoDeployerOutput) DeploymentWebhookURLs() pulumi.StringArrayOutput {
-	return o.ApplyT(func(v *AutoDeployer) pulumi.StringArrayOutput { return v.DeploymentWebhookURLs }).(pulumi.StringArrayOutput)
+func (o AutoDeployerOutput) DownstreamRef() pulumi.StringOutput {
+	return o.ApplyT(func(v *AutoDeployer) pulumi.StringOutput { return v.DownstreamRef }).(pulumi.StringOutput)
+}
+
+func (o AutoDeployerOutput) DownstreamWebhooks() pulumi.StringArrayOutput {
+	return o.ApplyT(func(v *AutoDeployer) pulumi.StringArrayOutput { return v.DownstreamWebhooks }).(pulumi.StringArrayOutput)
+}
+
+func (o AutoDeployerOutput) DownstreamRefs() pulumi.StringArrayOutput {
+	return o.ApplyT(func(v *AutoDeployer) pulumi.StringArrayOutput { return v.DownstreamRefs }).(pulumi.StringArrayOutput)
 }
 
 func (o AutoDeployerOutput) Organization() pulumi.StringOutput {

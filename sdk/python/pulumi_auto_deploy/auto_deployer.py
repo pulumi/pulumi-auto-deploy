@@ -14,26 +14,26 @@ __all__ = ['AutoDeployerArgs', 'AutoDeployer']
 @pulumi.input_type
 class AutoDeployerArgs:
     def __init__(__self__, *,
-                 downstream: pulumi.Input[Sequence[Any]],
+                 downstream_refs: pulumi.Input[Sequence[pulumi.Input[str]]],
                  organization: pulumi.Input[str],
                  project: pulumi.Input[str],
                  stack: pulumi.Input[str]):
         """
         The set of arguments for constructing a AutoDeployer resource.
         """
-        pulumi.set(__self__, "downstream", downstream)
+        pulumi.set(__self__, "downstream_refs", downstream_refs)
         pulumi.set(__self__, "organization", organization)
         pulumi.set(__self__, "project", project)
         pulumi.set(__self__, "stack", stack)
 
     @property
-    @pulumi.getter
-    def downstream(self) -> pulumi.Input[Sequence[Any]]:
-        return pulumi.get(self, "downstream")
+    @pulumi.getter(name="downstreamRefs")
+    def downstream_refs(self) -> pulumi.Input[Sequence[pulumi.Input[str]]]:
+        return pulumi.get(self, "downstream_refs")
 
-    @downstream.setter
-    def downstream(self, value: pulumi.Input[Sequence[Any]]):
-        pulumi.set(self, "downstream", value)
+    @downstream_refs.setter
+    def downstream_refs(self, value: pulumi.Input[Sequence[pulumi.Input[str]]]):
+        pulumi.set(self, "downstream_refs", value)
 
     @property
     @pulumi.getter
@@ -68,7 +68,7 @@ class AutoDeployer(pulumi.ComponentResource):
     def __init__(__self__,
                  resource_name: str,
                  opts: Optional[pulumi.ResourceOptions] = None,
-                 downstream: Optional[pulumi.Input[Sequence[Any]]] = None,
+                 downstream_refs: Optional[pulumi.Input[Sequence[pulumi.Input[str]]]] = None,
                  organization: Optional[pulumi.Input[str]] = None,
                  project: Optional[pulumi.Input[str]] = None,
                  stack: Optional[pulumi.Input[str]] = None,
@@ -101,7 +101,7 @@ class AutoDeployer(pulumi.ComponentResource):
     def _internal_init(__self__,
                  resource_name: str,
                  opts: Optional[pulumi.ResourceOptions] = None,
-                 downstream: Optional[pulumi.Input[Sequence[Any]]] = None,
+                 downstream_refs: Optional[pulumi.Input[Sequence[pulumi.Input[str]]]] = None,
                  organization: Optional[pulumi.Input[str]] = None,
                  project: Optional[pulumi.Input[str]] = None,
                  stack: Optional[pulumi.Input[str]] = None,
@@ -116,9 +116,9 @@ class AutoDeployer(pulumi.ComponentResource):
                 raise TypeError('__props__ is only valid when passed in combination with a valid opts.id to get an existing resource')
             __props__ = AutoDeployerArgs.__new__(AutoDeployerArgs)
 
-            if downstream is None and not opts.urn:
-                raise TypeError("Missing required property 'downstream'")
-            __props__.__dict__["downstream"] = downstream
+            if downstream_refs is None and not opts.urn:
+                raise TypeError("Missing required property 'downstream_refs'")
+            __props__.__dict__["downstream_refs"] = downstream_refs
             if organization is None and not opts.urn:
                 raise TypeError("Missing required property 'organization'")
             __props__.__dict__["organization"] = organization
@@ -128,7 +128,8 @@ class AutoDeployer(pulumi.ComponentResource):
             if stack is None and not opts.urn:
                 raise TypeError("Missing required property 'stack'")
             __props__.__dict__["stack"] = stack
-            __props__.__dict__["deployment_webhook_urls"] = None
+            __props__.__dict__["downstream_ref"] = None
+            __props__.__dict__["downstream_webhooks"] = None
         super(AutoDeployer, __self__).__init__(
             'auto-deploy:index:AutoDeployer',
             resource_name,
@@ -137,9 +138,19 @@ class AutoDeployer(pulumi.ComponentResource):
             remote=True)
 
     @property
-    @pulumi.getter(name="deploymentWebhookURLs")
-    def deployment_webhook_urls(self) -> pulumi.Output[Sequence[str]]:
-        return pulumi.get(self, "deployment_webhook_urls")
+    @pulumi.getter(name="DownstreamRef")
+    def downstream_ref(self) -> pulumi.Output[str]:
+        return pulumi.get(self, "downstream_ref")
+
+    @property
+    @pulumi.getter(name="DownstreamWebhooks")
+    def downstream_webhooks(self) -> pulumi.Output[Sequence[str]]:
+        return pulumi.get(self, "downstream_webhooks")
+
+    @property
+    @pulumi.getter(name="downstreamRefs")
+    def downstream_refs(self) -> pulumi.Output[Sequence[str]]:
+        return pulumi.get(self, "downstream_refs")
 
     @property
     @pulumi.getter

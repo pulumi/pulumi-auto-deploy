@@ -17,8 +17,8 @@ WORKING_DIR     := $(shell pwd)
 TESTPARALLELISM := 4
 
 ensure::
-	cd provider && go mod tidy
-	cd sdk && go mod tidy
+	cd provider && go mod tidy -compat=1.17
+	cd sdk && go mod tidy -compat=1.17
 
 provider::
 	(cd provider && go build -o $(WORKING_DIR)/bin/${PROVIDER} -ldflags "-X ${PROJECT}/${VERSION_PATH}=${VERSION}" $(PROJECT)/${PROVIDER_PATH}/cmd/$(PROVIDER))

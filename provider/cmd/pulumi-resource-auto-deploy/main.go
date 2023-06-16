@@ -15,9 +15,13 @@
 package main
 
 import (
+	"fmt"
+
 	p "github.com/pulumi/pulumi-go-provider"
 	"github.com/pulumi/pulumi-go-provider/infer"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
+
+	pcloud "github.com/pulumi/pulumi-pulumiservice/sdk/go/pulumiservice"
 )
 
 // Version is initialized by the Go linker to contain the semver of this build.
@@ -36,19 +40,21 @@ func main() {
 
 type AutoDeployer struct{}
 type AutoDeployerArgs struct {
-	Organization pulumi.StringInput `pulumi:"organization"`
-	Project      pulumi.StringInput `pulumi:"project"`
-	Stack        pulumi.StringInput `pulumi:"stack"`
-	Downstream   pulumi.ArrayInput  `pulumi:"downstream"` // TODO: this should be a recursive resource reference to []AutoDeployer
+	Organization   pulumi.StringInput   `pulumi:"organization"`
+	Project        pulumi.StringInput   `pulumi:"project"`
+	Stack          pulumi.StringInput   `pulumi:"stack"`
+	DownstreamRefs []pulumi.StringInput `pulumi:"downstreamRefs"`
 }
 
 type AutoDeployerOutput struct {
 	pulumi.ResourceState
-	Organization pulumi.StringInput `pulumi:"organization"`
-	Project      pulumi.StringInput `pulumi:"project"`
-	Stack        pulumi.StringInput `pulumi:"stack"`
+	Organization   pulumi.StringInput   `pulumi:"organization"`
+	Project        pulumi.StringInput   `pulumi:"project"`
+	Stack          pulumi.StringInput   `pulumi:"stack"`
+	DownstreamRefs []pulumi.StringInput `pulumi:"downstreamRefs"`
 	// Outputs
-	DeploymentWebhookURLs pulumi.StringArrayOutput `pulumi:"deploymentWebhookURLs"`
+	DownstreamRef      pulumi.StringOutput      `pulumi:"DownstreamRef"`
+	DownstreamWebhooks pulumi.StringArrayOutput `pulumi:"DownstreamWebhooks"`
 }
 
 func (r *AutoDeployer) Construct(ctx *pulumi.Context, name, typ string, args AutoDeployerArgs, opts pulumi.ResourceOption) (*AutoDeployerOutput, error) {
@@ -57,6 +63,28 @@ func (r *AutoDeployer) Construct(ctx *pulumi.Context, name, typ string, args Aut
 	if err != nil {
 		return nil, err
 	}
+
+	downstreamWebhooks := []pulumi.StringOutput{}
+
+	for i, d := range args.DownstreamRefs {
+		wh, err := pcloud.NewWebhook(ctx, fmt.Sprintf("%s-%d", name, i), &pcloud.WebhookArgs{
+			OrganizationName: args.Organization,
+			ProjectName:      args.Project,
+			StackName:        args.Stack,
+			Format:           pcloud.WebhookFormatPulumiDeployments,
+			PayloadUrl:       d,
+			Active:           pulumi.Bool(true),
+			DisplayName:      d,
+			Filters:          pcloud.WebhookFiltersArray{pcloud.WebhookFiltersUpdateSucceeded},
+		})
+		if err != nil {
+			return nil, err
+		}
+		downstreamWebhooks = append(downstreamWebhooks, wh.Name.Elem().ToStringOutput())
+	}
+
+	comp.DownstreamRef = pulumi.Sprintf("%s/%s", args.Project, args.Stack)
+	comp.DownstreamWebhooks = pulumi.ToStringArrayOutput(downstreamWebhooks)
 
 	return comp, nil
 }

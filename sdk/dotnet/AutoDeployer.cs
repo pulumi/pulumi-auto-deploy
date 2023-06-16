@@ -12,8 +12,14 @@ namespace Pulumi.AutoDeploy
     [AutoDeployResourceType("auto-deploy:index:AutoDeployer")]
     public partial class AutoDeployer : global::Pulumi.ComponentResource
     {
-        [Output("deploymentWebhookURLs")]
-        public Output<ImmutableArray<string>> DeploymentWebhookURLs { get; private set; } = null!;
+        [Output("DownstreamRef")]
+        public Output<string> DownstreamRef { get; private set; } = null!;
+
+        [Output("DownstreamWebhooks")]
+        public Output<ImmutableArray<string>> DownstreamWebhooks { get; private set; } = null!;
+
+        [Output("downstreamRefs")]
+        public Output<ImmutableArray<string>> DownstreamRefs { get; private set; } = null!;
 
         [Output("organization")]
         public Output<string> Organization { get; private set; } = null!;
@@ -52,12 +58,12 @@ namespace Pulumi.AutoDeploy
 
     public sealed class AutoDeployerArgs : global::Pulumi.ResourceArgs
     {
-        [Input("downstream", required: true)]
-        private InputList<object>? _downstream;
-        public InputList<object> Downstream
+        [Input("downstreamRefs", required: true)]
+        private InputList<string>? _downstreamRefs;
+        public InputList<string> DownstreamRefs
         {
-            get => _downstream ?? (_downstream = new InputList<object>());
-            set => _downstream = value;
+            get => _downstreamRefs ?? (_downstreamRefs = new InputList<string>());
+            set => _downstreamRefs = value;
         }
 
         [Input("organization", required: true)]

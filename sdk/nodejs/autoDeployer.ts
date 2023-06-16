@@ -19,7 +19,9 @@ export class AutoDeployer extends pulumi.ComponentResource {
         return obj['__pulumiType'] === AutoDeployer.__pulumiType;
     }
 
-    public /*out*/ readonly deploymentWebhookURLs!: pulumi.Output<string[]>;
+    public /*out*/ readonly DownstreamRef!: pulumi.Output<string>;
+    public /*out*/ readonly DownstreamWebhooks!: pulumi.Output<string[]>;
+    public readonly downstreamRefs!: pulumi.Output<string[]>;
     public readonly organization!: pulumi.Output<string>;
     public readonly project!: pulumi.Output<string>;
     public readonly stack!: pulumi.Output<string>;
@@ -35,8 +37,8 @@ export class AutoDeployer extends pulumi.ComponentResource {
         let resourceInputs: pulumi.Inputs = {};
         opts = opts || {};
         if (!opts.id) {
-            if ((!args || args.downstream === undefined) && !opts.urn) {
-                throw new Error("Missing required property 'downstream'");
+            if ((!args || args.downstreamRefs === undefined) && !opts.urn) {
+                throw new Error("Missing required property 'downstreamRefs'");
             }
             if ((!args || args.organization === undefined) && !opts.urn) {
                 throw new Error("Missing required property 'organization'");
@@ -47,13 +49,16 @@ export class AutoDeployer extends pulumi.ComponentResource {
             if ((!args || args.stack === undefined) && !opts.urn) {
                 throw new Error("Missing required property 'stack'");
             }
-            resourceInputs["downstream"] = args ? args.downstream : undefined;
+            resourceInputs["downstreamRefs"] = args ? args.downstreamRefs : undefined;
             resourceInputs["organization"] = args ? args.organization : undefined;
             resourceInputs["project"] = args ? args.project : undefined;
             resourceInputs["stack"] = args ? args.stack : undefined;
-            resourceInputs["deploymentWebhookURLs"] = undefined /*out*/;
+            resourceInputs["DownstreamRef"] = undefined /*out*/;
+            resourceInputs["DownstreamWebhooks"] = undefined /*out*/;
         } else {
-            resourceInputs["deploymentWebhookURLs"] = undefined /*out*/;
+            resourceInputs["DownstreamRef"] = undefined /*out*/;
+            resourceInputs["DownstreamWebhooks"] = undefined /*out*/;
+            resourceInputs["downstreamRefs"] = undefined /*out*/;
             resourceInputs["organization"] = undefined /*out*/;
             resourceInputs["project"] = undefined /*out*/;
             resourceInputs["stack"] = undefined /*out*/;
@@ -67,7 +72,7 @@ export class AutoDeployer extends pulumi.ComponentResource {
  * The set of arguments for constructing a AutoDeployer resource.
  */
 export interface AutoDeployerArgs {
-    downstream: pulumi.Input<any[]>;
+    downstreamRefs: pulumi.Input<pulumi.Input<string>[]>;
     organization: pulumi.Input<string>;
     project: pulumi.Input<string>;
     stack: pulumi.Input<string>;
