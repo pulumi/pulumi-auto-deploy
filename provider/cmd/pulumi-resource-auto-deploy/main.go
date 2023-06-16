@@ -53,8 +53,8 @@ type AutoDeployerOutput struct {
 	Stack          pulumi.StringInput   `pulumi:"stack"`
 	DownstreamRefs []pulumi.StringInput `pulumi:"downstreamRefs"`
 	// Outputs
-	DownstreamRef      pulumi.StringOutput      `pulumi:"DownstreamRef"`
-	DownstreamWebhooks pulumi.StringArrayOutput `pulumi:"DownstreamWebhooks"`
+	DownstreamRef      pulumi.StringOutput      `pulumi:"downstreamRef"`
+	DownstreamWebhooks pulumi.StringArrayOutput `pulumi:"dcdownstreamWebhooks"`
 }
 
 func (r *AutoDeployer) Construct(ctx *pulumi.Context, name, typ string, args AutoDeployerArgs, opts pulumi.ResourceOption) (*AutoDeployerOutput, error) {

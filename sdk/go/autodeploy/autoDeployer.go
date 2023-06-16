@@ -14,12 +14,12 @@ import (
 type AutoDeployer struct {
 	pulumi.ResourceState
 
-	DownstreamRef      pulumi.StringOutput      `pulumi:"DownstreamRef"`
-	DownstreamWebhooks pulumi.StringArrayOutput `pulumi:"DownstreamWebhooks"`
-	DownstreamRefs     pulumi.StringArrayOutput `pulumi:"downstreamRefs"`
-	Organization       pulumi.StringOutput      `pulumi:"organization"`
-	Project            pulumi.StringOutput      `pulumi:"project"`
-	Stack              pulumi.StringOutput      `pulumi:"stack"`
+	DcdownstreamWebhooks pulumi.StringArrayOutput `pulumi:"dcdownstreamWebhooks"`
+	DownstreamRef        pulumi.StringOutput      `pulumi:"downstreamRef"`
+	DownstreamRefs       pulumi.StringArrayOutput `pulumi:"downstreamRefs"`
+	Organization         pulumi.StringOutput      `pulumi:"organization"`
+	Project              pulumi.StringOutput      `pulumi:"project"`
+	Stack                pulumi.StringOutput      `pulumi:"stack"`
 }
 
 // NewAutoDeployer registers a new resource with the given unique name, arguments, and options.
@@ -101,12 +101,12 @@ func (o AutoDeployerOutput) ToAutoDeployerOutputWithContext(ctx context.Context)
 	return o
 }
 
-func (o AutoDeployerOutput) DownstreamRef() pulumi.StringOutput {
-	return o.ApplyT(func(v *AutoDeployer) pulumi.StringOutput { return v.DownstreamRef }).(pulumi.StringOutput)
+func (o AutoDeployerOutput) DcdownstreamWebhooks() pulumi.StringArrayOutput {
+	return o.ApplyT(func(v *AutoDeployer) pulumi.StringArrayOutput { return v.DcdownstreamWebhooks }).(pulumi.StringArrayOutput)
 }
 
-func (o AutoDeployerOutput) DownstreamWebhooks() pulumi.StringArrayOutput {
-	return o.ApplyT(func(v *AutoDeployer) pulumi.StringArrayOutput { return v.DownstreamWebhooks }).(pulumi.StringArrayOutput)
+func (o AutoDeployerOutput) DownstreamRef() pulumi.StringOutput {
+	return o.ApplyT(func(v *AutoDeployer) pulumi.StringOutput { return v.DownstreamRef }).(pulumi.StringOutput)
 }
 
 func (o AutoDeployerOutput) DownstreamRefs() pulumi.StringArrayOutput {

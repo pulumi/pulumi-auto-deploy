@@ -12,11 +12,11 @@ namespace Pulumi.AutoDeploy
     [AutoDeployResourceType("auto-deploy:index:AutoDeployer")]
     public partial class AutoDeployer : global::Pulumi.ComponentResource
     {
-        [Output("DownstreamRef")]
-        public Output<string> DownstreamRef { get; private set; } = null!;
+        [Output("dcdownstreamWebhooks")]
+        public Output<ImmutableArray<string>> DcdownstreamWebhooks { get; private set; } = null!;
 
-        [Output("DownstreamWebhooks")]
-        public Output<ImmutableArray<string>> DownstreamWebhooks { get; private set; } = null!;
+        [Output("downstreamRef")]
+        public Output<string> DownstreamRef { get; private set; } = null!;
 
         [Output("downstreamRefs")]
         public Output<ImmutableArray<string>> DownstreamRefs { get; private set; } = null!;

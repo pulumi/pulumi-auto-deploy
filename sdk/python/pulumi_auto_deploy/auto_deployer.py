@@ -128,8 +128,8 @@ class AutoDeployer(pulumi.ComponentResource):
             if stack is None and not opts.urn:
                 raise TypeError("Missing required property 'stack'")
             __props__.__dict__["stack"] = stack
+            __props__.__dict__["dcdownstream_webhooks"] = None
             __props__.__dict__["downstream_ref"] = None
-            __props__.__dict__["downstream_webhooks"] = None
         super(AutoDeployer, __self__).__init__(
             'auto-deploy:index:AutoDeployer',
             resource_name,
@@ -138,14 +138,14 @@ class AutoDeployer(pulumi.ComponentResource):
             remote=True)
 
     @property
-    @pulumi.getter(name="DownstreamRef")
-    def downstream_ref(self) -> pulumi.Output[str]:
-        return pulumi.get(self, "downstream_ref")
+    @pulumi.getter(name="dcdownstreamWebhooks")
+    def dcdownstream_webhooks(self) -> pulumi.Output[Sequence[str]]:
+        return pulumi.get(self, "dcdownstream_webhooks")
 
     @property
-    @pulumi.getter(name="DownstreamWebhooks")
-    def downstream_webhooks(self) -> pulumi.Output[Sequence[str]]:
-        return pulumi.get(self, "downstream_webhooks")
+    @pulumi.getter(name="downstreamRef")
+    def downstream_ref(self) -> pulumi.Output[str]:
+        return pulumi.get(self, "downstream_ref")
 
     @property
     @pulumi.getter(name="downstreamRefs")

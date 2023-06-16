@@ -19,8 +19,8 @@ export class AutoDeployer extends pulumi.ComponentResource {
         return obj['__pulumiType'] === AutoDeployer.__pulumiType;
     }
 
-    public /*out*/ readonly DownstreamRef!: pulumi.Output<string>;
-    public /*out*/ readonly DownstreamWebhooks!: pulumi.Output<string[]>;
+    public /*out*/ readonly dcdownstreamWebhooks!: pulumi.Output<string[]>;
+    public /*out*/ readonly downstreamRef!: pulumi.Output<string>;
     public readonly downstreamRefs!: pulumi.Output<string[]>;
     public readonly organization!: pulumi.Output<string>;
     public readonly project!: pulumi.Output<string>;
@@ -53,11 +53,11 @@ export class AutoDeployer extends pulumi.ComponentResource {
             resourceInputs["organization"] = args ? args.organization : undefined;
             resourceInputs["project"] = args ? args.project : undefined;
             resourceInputs["stack"] = args ? args.stack : undefined;
-            resourceInputs["DownstreamRef"] = undefined /*out*/;
-            resourceInputs["DownstreamWebhooks"] = undefined /*out*/;
+            resourceInputs["dcdownstreamWebhooks"] = undefined /*out*/;
+            resourceInputs["downstreamRef"] = undefined /*out*/;
         } else {
-            resourceInputs["DownstreamRef"] = undefined /*out*/;
-            resourceInputs["DownstreamWebhooks"] = undefined /*out*/;
+            resourceInputs["dcdownstreamWebhooks"] = undefined /*out*/;
+            resourceInputs["downstreamRef"] = undefined /*out*/;
             resourceInputs["downstreamRefs"] = undefined /*out*/;
             resourceInputs["organization"] = undefined /*out*/;
             resourceInputs["project"] = undefined /*out*/;
