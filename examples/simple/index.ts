@@ -50,7 +50,7 @@ export const b = new autodeploy.AutoDeployer("auto-deployer-b", {
     organization,
     project,
     stack: "b",
-    downstreamRefs: [d.downstreamRef, e.downstreamRef, f.downstreamRef],
+    downstreamRefs: [d.ref, e.ref, f.ref],
 
 });
 
@@ -58,6 +58,6 @@ export const a = new autodeploy.AutoDeployer("auto-deployer-a", {
     organization,
     project,
     stack: "a",
-    downstreamRefs: [b.downstreamRef, c.downstreamRef],
+    downstreamRefs: [b.ref, c.ref],
 });
 

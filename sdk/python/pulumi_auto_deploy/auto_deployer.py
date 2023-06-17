@@ -20,6 +20,11 @@ class AutoDeployerArgs:
                  stack: pulumi.Input[str]):
         """
         The set of arguments for constructing a AutoDeployer resource.
+        :param pulumi.Input[Sequence[pulumi.Input[str]]] downstream_refs: A list of `AutoDeployer.DownstreamRef` indicating which stacks should
+               automatically be updated via Pulumi Deployments when this stack is successfully updated.
+        :param pulumi.Input[str] organization: The organization name for the AutoDeployer stack.
+        :param pulumi.Input[str] project: The project name for the AutoDeployer stack.
+        :param pulumi.Input[str] stack: The stack name for this AutoDeployer.
         """
         pulumi.set(__self__, "downstream_refs", downstream_refs)
         pulumi.set(__self__, "organization", organization)
@@ -29,6 +34,10 @@ class AutoDeployerArgs:
     @property
     @pulumi.getter(name="downstreamRefs")
     def downstream_refs(self) -> pulumi.Input[Sequence[pulumi.Input[str]]]:
+        """
+        A list of `AutoDeployer.DownstreamRef` indicating which stacks should
+        automatically be updated via Pulumi Deployments when this stack is successfully updated.
+        """
         return pulumi.get(self, "downstream_refs")
 
     @downstream_refs.setter
@@ -38,6 +47,9 @@ class AutoDeployerArgs:
     @property
     @pulumi.getter
     def organization(self) -> pulumi.Input[str]:
+        """
+        The organization name for the AutoDeployer stack.
+        """
         return pulumi.get(self, "organization")
 
     @organization.setter
@@ -47,6 +59,9 @@ class AutoDeployerArgs:
     @property
     @pulumi.getter
     def project(self) -> pulumi.Input[str]:
+        """
+        The project name for the AutoDeployer stack.
+        """
         return pulumi.get(self, "project")
 
     @project.setter
@@ -56,6 +71,9 @@ class AutoDeployerArgs:
     @property
     @pulumi.getter
     def stack(self) -> pulumi.Input[str]:
+        """
+        The stack name for this AutoDeployer.
+        """
         return pulumi.get(self, "stack")
 
     @stack.setter
@@ -74,9 +92,16 @@ class AutoDeployer(pulumi.ComponentResource):
                  stack: Optional[pulumi.Input[str]] = None,
                  __props__=None):
         """
-        Create a AutoDeployer resource with the given unique name, props, and options.
+        Automatically trigger downstream updates on dependent stacks via Pulumi Deployments.
+        AutoDeployer requires that stacks have Deployment Settings configured.
+
         :param str resource_name: The name of the resource.
         :param pulumi.ResourceOptions opts: Options for the resource.
+        :param pulumi.Input[Sequence[pulumi.Input[str]]] downstream_refs: A list of `AutoDeployer.DownstreamRef` indicating which stacks should
+               automatically be updated via Pulumi Deployments when this stack is successfully updated.
+        :param pulumi.Input[str] organization: The organization name for the AutoDeployer stack.
+        :param pulumi.Input[str] project: The project name for the AutoDeployer stack.
+        :param pulumi.Input[str] stack: The stack name for this AutoDeployer.
         """
         ...
     @overload
@@ -85,7 +110,9 @@ class AutoDeployer(pulumi.ComponentResource):
                  args: AutoDeployerArgs,
                  opts: Optional[pulumi.ResourceOptions] = None):
         """
-        Create a AutoDeployer resource with the given unique name, props, and options.
+        Automatically trigger downstream updates on dependent stacks via Pulumi Deployments.
+        AutoDeployer requires that stacks have Deployment Settings configured.
+
         :param str resource_name: The name of the resource.
         :param AutoDeployerArgs args: The arguments to use to populate this resource's properties.
         :param pulumi.ResourceOptions opts: Options for the resource.
@@ -128,8 +155,8 @@ class AutoDeployer(pulumi.ComponentResource):
             if stack is None and not opts.urn:
                 raise TypeError("Missing required property 'stack'")
             __props__.__dict__["stack"] = stack
-            __props__.__dict__["dcdownstream_webhooks"] = None
-            __props__.__dict__["downstream_ref"] = None
+            __props__.__dict__["downstream_webhooks"] = None
+            __props__.__dict__["ref"] = None
         super(AutoDeployer, __self__).__init__(
             'auto-deploy:index:AutoDeployer',
             resource_name,
@@ -138,32 +165,52 @@ class AutoDeployer(pulumi.ComponentResource):
             remote=True)
 
     @property
-    @pulumi.getter(name="dcdownstreamWebhooks")
-    def dcdownstream_webhooks(self) -> pulumi.Output[Sequence[str]]:
-        return pulumi.get(self, "dcdownstream_webhooks")
-
-    @property
-    @pulumi.getter(name="downstreamRef")
-    def downstream_ref(self) -> pulumi.Output[str]:
-        return pulumi.get(self, "downstream_ref")
-
-    @property
     @pulumi.getter(name="downstreamRefs")
     def downstream_refs(self) -> pulumi.Output[Sequence[str]]:
+        """
+        A list of `AutoDeployer.DownstreamRef` indicating which stacks should
+        automatically be updated via Pulumi Deployments when this stack is successfully updated.
+        """
         return pulumi.get(self, "downstream_refs")
+
+    @property
+    @pulumi.getter(name="downstreamWebhooks")
+    def downstream_webhooks(self) -> pulumi.Output[Sequence[str]]:
+        """
+        A list of webhook URLs configured on this stack to trigger downstream deployments.
+        """
+        return pulumi.get(self, "downstream_webhooks")
 
     @property
     @pulumi.getter
     def organization(self) -> pulumi.Output[str]:
+        """
+        The organization name for the AutoDeployer stack.
+        """
         return pulumi.get(self, "organization")
 
     @property
     @pulumi.getter
     def project(self) -> pulumi.Output[str]:
+        """
+        The project name for the AutoDeployer stack.
+        """
         return pulumi.get(self, "project")
 
     @property
     @pulumi.getter
+    def ref(self) -> pulumi.Output[str]:
+        """
+        The output reference that can be passed to another AutoDeployer's downstreamRefs list
+        to configure depedent updates.
+        """
+        return pulumi.get(self, "ref")
+
+    @property
+    @pulumi.getter
     def stack(self) -> pulumi.Output[str]:
+        """
+        The stack name for this AutoDeployer.
+        """
         return pulumi.get(self, "stack")
 

@@ -48,13 +48,13 @@ type AutoDeployerArgs struct {
 
 type AutoDeployerOutput struct {
 	pulumi.ResourceState
-	Organization   pulumi.StringInput   `pulumi:"organization"`
-	Project        pulumi.StringInput   `pulumi:"project"`
-	Stack          pulumi.StringInput   `pulumi:"stack"`
-	DownstreamRefs []pulumi.StringInput `pulumi:"downstreamRefs"`
+	Organization pulumi.StringInput `pulumi:"organization"`
+	Project      pulumi.StringInput `pulumi:"project"`
+	Stack        pulumi.StringInput `pulumi:"stack"`
 	// Outputs
-	DownstreamRef      pulumi.StringOutput      `pulumi:"downstreamRef"`
-	DownstreamWebhooks pulumi.StringArrayOutput `pulumi:"dcdownstreamWebhooks"`
+	DownstreamRefs     pulumi.StringArrayOutput `pulumi:"downstreamRefs"`
+	Ref                pulumi.StringOutput      `pulumi:"ref"`
+	DownstreamWebhooks pulumi.StringArrayOutput `pulumi:"downstreamWebhooks"`
 }
 
 func (r *AutoDeployer) Construct(ctx *pulumi.Context, name, typ string, args AutoDeployerArgs, opts pulumi.ResourceOption) (*AutoDeployerOutput, error) {
@@ -65,6 +65,7 @@ func (r *AutoDeployer) Construct(ctx *pulumi.Context, name, typ string, args Aut
 	}
 
 	downstreamWebhooks := []pulumi.StringOutput{}
+	downstreamRefs := []pulumi.StringOutput{}
 
 	for i, d := range args.DownstreamRefs {
 		wh, err := pcloud.NewWebhook(ctx, fmt.Sprintf("%s-%d", name, i), &pcloud.WebhookArgs{
@@ -76,15 +77,51 @@ func (r *AutoDeployer) Construct(ctx *pulumi.Context, name, typ string, args Aut
 			Active:           pulumi.Bool(true),
 			DisplayName:      d,
 			Filters:          pcloud.WebhookFiltersArray{pcloud.WebhookFiltersUpdateSucceeded},
-		})
+		}, pulumi.Parent(comp))
 		if err != nil {
 			return nil, err
 		}
+		downstreamRefs = append(downstreamRefs, d.ToStringOutput())
 		downstreamWebhooks = append(downstreamWebhooks, wh.Name.Elem().ToStringOutput())
 	}
 
-	comp.DownstreamRef = pulumi.Sprintf("%s/%s", args.Project, args.Stack)
+	comp.Organization = args.Organization
+	comp.Project = args.Project
+	comp.Stack = args.Stack
+	comp.DownstreamRefs = pulumi.ToStringArrayOutput(downstreamRefs)
+	comp.Ref = pulumi.Sprintf("%s/%s", args.Project, args.Stack)
 	comp.DownstreamWebhooks = pulumi.ToStringArrayOutput(downstreamWebhooks)
 
 	return comp, nil
+}
+
+// Implementing Annotate lets you provide descriptions and default values for resources and they will
+// be visible in the provider's schema and the generated SDKs.
+func (c *AutoDeployer) Annotate(a infer.Annotator) {
+	a.Describe(&c, "Automatically trigger downstream updates on dependent stacks via Pulumi Deployments.\n"+
+		"AutoDeployer requires that stacks have Deployment Settings configured.")
+}
+
+// Annotate lets you provide descriptions and default values for fields and they will
+// be visible in the provider's schema and the generated SDKs.
+func (c *AutoDeployerArgs) Annotate(a infer.Annotator) {
+	a.Describe(&c.Organization, "The organization name for the AutoDeployer stack.")
+	a.Describe(&c.Project, "The project name for the AutoDeployer stack.")
+	a.Describe(&c.Stack, "The stack name for this AutoDeployer.")
+	a.Describe(&c.DownstreamRefs, "A list of `AutoDeployer.DownstreamRef` indicating which stacks should\n"+
+		"automatically be updated via Pulumi Deployments when this stack is successfully updated.")
+}
+
+// Annotate lets you provide descriptions and default values for fields and they will
+// be visible in the provider's schema and the generated SDKs.
+func (c *AutoDeployerOutput) Annotate(a infer.Annotator) {
+	a.Describe(&c.Organization, "The organization name for the AutoDeployer stack.")
+	a.Describe(&c.Project, "The project name for the AutoDeployer stack.")
+	a.Describe(&c.Stack, "The stack name for this AutoDeployer.")
+	a.Describe(&c.DownstreamRefs, "A list of `AutoDeployer.DownstreamRef` indicating which stacks should\n"+
+		"automatically be updated via Pulumi Deployments when this stack is successfully updated.")
+
+	a.Describe(&c.Ref, "The output reference that can be passed to another AutoDeployer's downstreamRefs list\n"+
+		"to configure depedent updates.")
+	a.Describe(&c.DownstreamWebhooks, "A list of webhook URLs configured on this stack to trigger downstream deployments.")
 }

@@ -9,24 +9,48 @@ using Pulumi.Serialization;
 
 namespace Pulumi.AutoDeploy
 {
+    /// <summary>
+    /// Automatically trigger downstream updates on dependent stacks via Pulumi Deployments.
+    /// AutoDeployer requires that stacks have Deployment Settings configured.
+    /// </summary>
     [AutoDeployResourceType("auto-deploy:index:AutoDeployer")]
     public partial class AutoDeployer : global::Pulumi.ComponentResource
     {
-        [Output("dcdownstreamWebhooks")]
-        public Output<ImmutableArray<string>> DcdownstreamWebhooks { get; private set; } = null!;
-
-        [Output("downstreamRef")]
-        public Output<string> DownstreamRef { get; private set; } = null!;
-
+        /// <summary>
+        /// A list of `AutoDeployer.DownstreamRef` indicating which stacks should
+        /// automatically be updated via Pulumi Deployments when this stack is successfully updated.
+        /// </summary>
         [Output("downstreamRefs")]
         public Output<ImmutableArray<string>> DownstreamRefs { get; private set; } = null!;
 
+        /// <summary>
+        /// A list of webhook URLs configured on this stack to trigger downstream deployments.
+        /// </summary>
+        [Output("downstreamWebhooks")]
+        public Output<ImmutableArray<string>> DownstreamWebhooks { get; private set; } = null!;
+
+        /// <summary>
+        /// The organization name for the AutoDeployer stack.
+        /// </summary>
         [Output("organization")]
         public Output<string> Organization { get; private set; } = null!;
 
+        /// <summary>
+        /// The project name for the AutoDeployer stack.
+        /// </summary>
         [Output("project")]
         public Output<string> Project { get; private set; } = null!;
 
+        /// <summary>
+        /// The output reference that can be passed to another AutoDeployer's downstreamRefs list
+        /// to configure depedent updates.
+        /// </summary>
+        [Output("ref")]
+        public Output<string> Ref { get; private set; } = null!;
+
+        /// <summary>
+        /// The stack name for this AutoDeployer.
+        /// </summary>
         [Output("stack")]
         public Output<string> Stack { get; private set; } = null!;
 
@@ -60,18 +84,32 @@ namespace Pulumi.AutoDeploy
     {
         [Input("downstreamRefs", required: true)]
         private InputList<string>? _downstreamRefs;
+
+        /// <summary>
+        /// A list of `AutoDeployer.DownstreamRef` indicating which stacks should
+        /// automatically be updated via Pulumi Deployments when this stack is successfully updated.
+        /// </summary>
         public InputList<string> DownstreamRefs
         {
             get => _downstreamRefs ?? (_downstreamRefs = new InputList<string>());
             set => _downstreamRefs = value;
         }
 
+        /// <summary>
+        /// The organization name for the AutoDeployer stack.
+        /// </summary>
         [Input("organization", required: true)]
         public Input<string> Organization { get; set; } = null!;
 
+        /// <summary>
+        /// The project name for the AutoDeployer stack.
+        /// </summary>
         [Input("project", required: true)]
         public Input<string> Project { get; set; } = null!;
 
+        /// <summary>
+        /// The stack name for this AutoDeployer.
+        /// </summary>
         [Input("stack", required: true)]
         public Input<string> Stack { get; set; } = null!;
 

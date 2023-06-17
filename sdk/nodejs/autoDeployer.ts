@@ -4,6 +4,10 @@
 import * as pulumi from "@pulumi/pulumi";
 import * as utilities from "./utilities";
 
+/**
+ * Automatically trigger downstream updates on dependent stacks via Pulumi Deployments.
+ * AutoDeployer requires that stacks have Deployment Settings configured.
+ */
 export class AutoDeployer extends pulumi.ComponentResource {
     /** @internal */
     public static readonly __pulumiType = 'auto-deploy:index:AutoDeployer';
@@ -19,11 +23,31 @@ export class AutoDeployer extends pulumi.ComponentResource {
         return obj['__pulumiType'] === AutoDeployer.__pulumiType;
     }
 
-    public /*out*/ readonly dcdownstreamWebhooks!: pulumi.Output<string[]>;
-    public /*out*/ readonly downstreamRef!: pulumi.Output<string>;
+    /**
+     * A list of `AutoDeployer.DownstreamRef` indicating which stacks should
+     * automatically be updated via Pulumi Deployments when this stack is successfully updated.
+     */
     public readonly downstreamRefs!: pulumi.Output<string[]>;
+    /**
+     * A list of webhook URLs configured on this stack to trigger downstream deployments.
+     */
+    public /*out*/ readonly downstreamWebhooks!: pulumi.Output<string[]>;
+    /**
+     * The organization name for the AutoDeployer stack.
+     */
     public readonly organization!: pulumi.Output<string>;
+    /**
+     * The project name for the AutoDeployer stack.
+     */
     public readonly project!: pulumi.Output<string>;
+    /**
+     * The output reference that can be passed to another AutoDeployer's downstreamRefs list
+     * to configure depedent updates.
+     */
+    public /*out*/ readonly ref!: pulumi.Output<string>;
+    /**
+     * The stack name for this AutoDeployer.
+     */
     public readonly stack!: pulumi.Output<string>;
 
     /**
@@ -53,14 +77,14 @@ export class AutoDeployer extends pulumi.ComponentResource {
             resourceInputs["organization"] = args ? args.organization : undefined;
             resourceInputs["project"] = args ? args.project : undefined;
             resourceInputs["stack"] = args ? args.stack : undefined;
-            resourceInputs["dcdownstreamWebhooks"] = undefined /*out*/;
-            resourceInputs["downstreamRef"] = undefined /*out*/;
+            resourceInputs["downstreamWebhooks"] = undefined /*out*/;
+            resourceInputs["ref"] = undefined /*out*/;
         } else {
-            resourceInputs["dcdownstreamWebhooks"] = undefined /*out*/;
-            resourceInputs["downstreamRef"] = undefined /*out*/;
             resourceInputs["downstreamRefs"] = undefined /*out*/;
+            resourceInputs["downstreamWebhooks"] = undefined /*out*/;
             resourceInputs["organization"] = undefined /*out*/;
             resourceInputs["project"] = undefined /*out*/;
+            resourceInputs["ref"] = undefined /*out*/;
             resourceInputs["stack"] = undefined /*out*/;
         }
         opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts);
@@ -72,8 +96,21 @@ export class AutoDeployer extends pulumi.ComponentResource {
  * The set of arguments for constructing a AutoDeployer resource.
  */
 export interface AutoDeployerArgs {
+    /**
+     * A list of `AutoDeployer.DownstreamRef` indicating which stacks should
+     * automatically be updated via Pulumi Deployments when this stack is successfully updated.
+     */
     downstreamRefs: pulumi.Input<pulumi.Input<string>[]>;
+    /**
+     * The organization name for the AutoDeployer stack.
+     */
     organization: pulumi.Input<string>;
+    /**
+     * The project name for the AutoDeployer stack.
+     */
     project: pulumi.Input<string>;
+    /**
+     * The stack name for this AutoDeployer.
+     */
     stack: pulumi.Input<string>;
 }

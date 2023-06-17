@@ -11,15 +11,25 @@ import (
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
 
+// Automatically trigger downstream updates on dependent stacks via Pulumi Deployments.
+// AutoDeployer requires that stacks have Deployment Settings configured.
 type AutoDeployer struct {
 	pulumi.ResourceState
 
-	DcdownstreamWebhooks pulumi.StringArrayOutput `pulumi:"dcdownstreamWebhooks"`
-	DownstreamRef        pulumi.StringOutput      `pulumi:"downstreamRef"`
-	DownstreamRefs       pulumi.StringArrayOutput `pulumi:"downstreamRefs"`
-	Organization         pulumi.StringOutput      `pulumi:"organization"`
-	Project              pulumi.StringOutput      `pulumi:"project"`
-	Stack                pulumi.StringOutput      `pulumi:"stack"`
+	// A list of `AutoDeployer.DownstreamRef` indicating which stacks should
+	// automatically be updated via Pulumi Deployments when this stack is successfully updated.
+	DownstreamRefs pulumi.StringArrayOutput `pulumi:"downstreamRefs"`
+	// A list of webhook URLs configured on this stack to trigger downstream deployments.
+	DownstreamWebhooks pulumi.StringArrayOutput `pulumi:"downstreamWebhooks"`
+	// The organization name for the AutoDeployer stack.
+	Organization pulumi.StringOutput `pulumi:"organization"`
+	// The project name for the AutoDeployer stack.
+	Project pulumi.StringOutput `pulumi:"project"`
+	// The output reference that can be passed to another AutoDeployer's downstreamRefs list
+	// to configure depedent updates.
+	Ref pulumi.StringOutput `pulumi:"ref"`
+	// The stack name for this AutoDeployer.
+	Stack pulumi.StringOutput `pulumi:"stack"`
 }
 
 // NewAutoDeployer registers a new resource with the given unique name, arguments, and options.
@@ -50,18 +60,28 @@ func NewAutoDeployer(ctx *pulumi.Context,
 }
 
 type autoDeployerArgs struct {
+	// A list of `AutoDeployer.DownstreamRef` indicating which stacks should
+	// automatically be updated via Pulumi Deployments when this stack is successfully updated.
 	DownstreamRefs []string `pulumi:"downstreamRefs"`
-	Organization   string   `pulumi:"organization"`
-	Project        string   `pulumi:"project"`
-	Stack          string   `pulumi:"stack"`
+	// The organization name for the AutoDeployer stack.
+	Organization string `pulumi:"organization"`
+	// The project name for the AutoDeployer stack.
+	Project string `pulumi:"project"`
+	// The stack name for this AutoDeployer.
+	Stack string `pulumi:"stack"`
 }
 
 // The set of arguments for constructing a AutoDeployer resource.
 type AutoDeployerArgs struct {
+	// A list of `AutoDeployer.DownstreamRef` indicating which stacks should
+	// automatically be updated via Pulumi Deployments when this stack is successfully updated.
 	DownstreamRefs pulumi.StringArrayInput
-	Organization   pulumi.StringInput
-	Project        pulumi.StringInput
-	Stack          pulumi.StringInput
+	// The organization name for the AutoDeployer stack.
+	Organization pulumi.StringInput
+	// The project name for the AutoDeployer stack.
+	Project pulumi.StringInput
+	// The stack name for this AutoDeployer.
+	Stack pulumi.StringInput
 }
 
 func (AutoDeployerArgs) ElementType() reflect.Type {
@@ -101,26 +121,34 @@ func (o AutoDeployerOutput) ToAutoDeployerOutputWithContext(ctx context.Context)
 	return o
 }
 
-func (o AutoDeployerOutput) DcdownstreamWebhooks() pulumi.StringArrayOutput {
-	return o.ApplyT(func(v *AutoDeployer) pulumi.StringArrayOutput { return v.DcdownstreamWebhooks }).(pulumi.StringArrayOutput)
-}
-
-func (o AutoDeployerOutput) DownstreamRef() pulumi.StringOutput {
-	return o.ApplyT(func(v *AutoDeployer) pulumi.StringOutput { return v.DownstreamRef }).(pulumi.StringOutput)
-}
-
+// A list of `AutoDeployer.DownstreamRef` indicating which stacks should
+// automatically be updated via Pulumi Deployments when this stack is successfully updated.
 func (o AutoDeployerOutput) DownstreamRefs() pulumi.StringArrayOutput {
 	return o.ApplyT(func(v *AutoDeployer) pulumi.StringArrayOutput { return v.DownstreamRefs }).(pulumi.StringArrayOutput)
 }
 
+// A list of webhook URLs configured on this stack to trigger downstream deployments.
+func (o AutoDeployerOutput) DownstreamWebhooks() pulumi.StringArrayOutput {
+	return o.ApplyT(func(v *AutoDeployer) pulumi.StringArrayOutput { return v.DownstreamWebhooks }).(pulumi.StringArrayOutput)
+}
+
+// The organization name for the AutoDeployer stack.
 func (o AutoDeployerOutput) Organization() pulumi.StringOutput {
 	return o.ApplyT(func(v *AutoDeployer) pulumi.StringOutput { return v.Organization }).(pulumi.StringOutput)
 }
 
+// The project name for the AutoDeployer stack.
 func (o AutoDeployerOutput) Project() pulumi.StringOutput {
 	return o.ApplyT(func(v *AutoDeployer) pulumi.StringOutput { return v.Project }).(pulumi.StringOutput)
 }
 
+// The output reference that can be passed to another AutoDeployer's downstreamRefs list
+// to configure depedent updates.
+func (o AutoDeployerOutput) Ref() pulumi.StringOutput {
+	return o.ApplyT(func(v *AutoDeployer) pulumi.StringOutput { return v.Ref }).(pulumi.StringOutput)
+}
+
+// The stack name for this AutoDeployer.
 func (o AutoDeployerOutput) Stack() pulumi.StringOutput {
 	return o.ApplyT(func(v *AutoDeployer) pulumi.StringOutput { return v.Stack }).(pulumi.StringOutput)
 }
