@@ -1,0 +1,55 @@
+name: auto-deploy-demo
+runtime: yaml
+description: A simple auto-deploy example
+variables:
+  project: dependency-example
+  # TODO: update once https://github.com/pulumi/pulumi-yaml/issues/461 is fixed
+  organization: pulumi
+resources:
+  f:
+    type: auto-deploy:AutoDeployer
+    properties:
+      organization: ${organization}
+      project: ${project}
+      stack: f
+      downstreamRefs: []
+  e:
+    type: auto-deploy:AutoDeployer
+    properties:
+      organization: ${organization}
+      project: ${project}
+      stack: e
+      downstreamRefs: []
+  d:
+    type: auto-deploy:AutoDeployer
+    properties:
+      organization: ${organization}
+      project: ${project}
+      stack: d
+      downstreamRefs: []
+  c:
+    type: auto-deploy:AutoDeployer
+    properties:
+      organization: ${organization}
+      project: ${project}
+      stack: c
+      downstreamRefs: []
+  b:
+    type: auto-deploy:AutoDeployer
+    properties:
+      organization: ${organization}
+      project: ${project}
+      stack: b
+      downstreamRefs:
+        - ${d.ref}
+        - ${e.ref}
+        - ${f.ref}
+  a:
+    type: auto-deploy:AutoDeployer
+    properties:
+      organization: ${organization}
+      project: ${project}
+      stack: a
+      downstreamRefs:
+        - ${b.ref}
+        - ${c.ref}

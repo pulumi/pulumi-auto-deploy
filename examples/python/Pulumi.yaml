@@ -1,0 +1,3 @@
+name: auto-deploy-demo
+runtime: python
+description: A simple auto-deploy example
