@@ -140,8 +140,6 @@ jobs:
           repo: pulumi/pulumictl
       - name: Install Pulumi CLI
         uses: pulumi/actions@v4
-      - name: Build codegen binaries
-        run: make gen
       - name: Build provider binary
         run: make provider
       - name: Check worktree clean

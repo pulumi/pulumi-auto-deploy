@@ -166,7 +166,7 @@ jobs:
         uses: gradle/wrapper-validation-action@e6e38bacfdf1a337459f332974bb2327a31aaf4b
         if: ${{ matrix.language == 'java' }}
       - name: Build gen and provider binary
-        run: make gen provider
+        run: make provider
       - name: Generate SDK
         run: make ${{ matrix.language }}_sdk
       - name: Check worktree clean
