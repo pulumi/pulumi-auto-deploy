@@ -6,6 +6,19 @@ import (
 )
 
 func main() {
+	/**
+	*
+	* The following example configures automatic deployment of stacks with the following dependency graph:
+	   a
+	   ├── b
+	   │   ├── d
+	   │   ├── e
+	   │   └── f
+	   └── c
+	* Whenever a node in the graph is updated,
+	* all downstream nodes will be automatically updated via a webhook triggering Pulumi Deployments.
+	*/
+
 	pulumi.Run(func(ctx *pulumi.Context) error {
 		projectVar := "dependency-example"
 		organization := "pulumi"

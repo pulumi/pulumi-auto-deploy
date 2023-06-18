@@ -14,7 +14,6 @@ import * as pulumi from "@pulumi/pulumi";
  * all downstream nodes will be automatically updated via a webhook triggering Pulumi Deployments.
  */
 
-
 const organization = pulumi.getOrganization();
 const project = "dependency-example"
 
