@@ -1,95 +1,108 @@
-# Pulumi Native Provider Boilerplate
+# Pulumi Auto Deploy
 
-This repository is a boilerplate showing how to create a native Pulumi provider.
+[![Slack](https://www.pulumi.com/images/docs/badges/slack.svg)](https://slack.pulumi.com)
+[![NPM version](https://badge.fury.io/js/%40pulumi%2Fauto-deploy.svg)](https://www.npmjs.com/package/@pulumi/auto-deploy)
+[![Python version](https://badge.fury.io/py/pulumi-auto-deploy.svg)](https://pypi.org/project/pulumi-auto-deploy)
+[![NuGet version](https://badge.fury.io/nu/pulumi.auto-deploy.svg)](https://badge.fury.io/nu/pulumi.auto-deploy)
+[![PkgGoDev](https://pkg.go.dev/badge/github.com/pulumi/pulumi-auto-deploy/sdk/go/auto-deploy)](https://pkg.go.dev/github.com/pulumi/pulumi-auto-deploy/sdk/go)
+[![License](https://img.shields.io/npm/l/%40pulumi%2Fauto-deploy.svg)](https://github.com/pulumi/pulumi-auto-deploy/blob/main/LICENSE)
 
-## Authoring a Pulumi Native Provider
+A Pulumi Component for configuring automated updates of dependent stacks using [Pulumi Deployments](https://www.pulumi.com/docs/pulumi-cloud/deployments/). It lets you simply express dependencies between stacks, and takes care of creating and updating the necessary Deployment Webhooks under the hood. Each stack that you configure must have [Deployment Settings](https://www.pulumi.com/docs/pulumi-cloud/deployments/reference/#deployment-settings).
 
-This boilerplate creates a working Pulumi-owned provider named `auto-deploy`.
-It implements a random number generator that you can [build and test out for yourself](#test-against-the-example) and then replace the Random code with code specific to your provider.
+```ts
+import * as autodeploy from "@pulumi/auto-deploy";
+import * as pulumi from "@pulumi/pulumi";
+
+/**
+ *
+ * The following example configures automatic deployment of stacks with the following dependency graph:
+    a
+    ├── b
+    │   ├── d
+    │   ├── e
+    │   └── f
+    └── c
+ * Whenever a node in the graph is updated, 
+ * all downstream nodes will be automatically updated via a webhook triggering Pulumi Deployments.
+ */
 
 
-### Prerequisites
+const organization = pulumi.getOrganization();
+const project = "dependency-example"
 
-Ensure the following tools are installed and present in your `$PATH`:
+export const f = new autodeploy.AutoDeployer("auto-deployer-f", {
+    organization,
+    project,
+    stack: "f",
+    downstreamRefs: [],
+});
 
-* [`pulumictl`](https://github.com/pulumi/pulumictl#installation)
-* [Go 1.17](https://golang.org/dl/) or 1.latest
-* [NodeJS](https://nodejs.org/en/) 14.x.  We recommend using [nvm](https://github.com/nvm-sh/nvm) to manage NodeJS installations.
-* [Yarn](https://yarnpkg.com/)
-* [TypeScript](https://www.typescriptlang.org/)
-* [Python](https://www.python.org/downloads/) (called as `python3`).  For recent versions of MacOS, the system-installed version is fine.
-* [.NET](https://dotnet.microsoft.com/download)
+export const e = new autodeploy.AutoDeployer("auto-deployer-e", {
+    organization,
+    project,
+    stack: "e",
+    downstreamRefs: [],
+});
 
+export const d = new autodeploy.AutoDeployer("auto-deployer-d", {
+    organization,
+    project,
+    stack: "d",
+    downstreamRefs: [],
+});
 
-### Creating and Initializing the Repository
+export const c = new autodeploy.AutoDeployer("auto-deployer-c", {
+    organization,
+    project,
+    stack: "c",
+    downstreamRefs: [],
+});
 
-Pulumi offers this repository as a [GitHub template repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template) for convenience.  From this repository:
+export const b = new autodeploy.AutoDeployer("auto-deployer-b", {
+    organization,
+    project,
+    stack: "b",
+    downstreamRefs: [d.ref, e.ref, f.ref],
 
-1. Click "Use this template".
-1. Set the following options:
-   * Owner: pulumi 
-   * Repository name: pulumi-auto-deploy-native (replace "auto-deploy" with the name of your provider)
-   * Description: Pulumi provider for auto-deploy
-   * Repository type: Public
-1. Clone the generated repository.
+});
 
-From the templated repository:
+export const a = new autodeploy.AutoDeployer("auto-deployer-a", {
+    organization,
+    project,
+    stack: "a",
+    downstreamRefs: [b.ref, c.ref],
+});
 
-1. Search-replace `auto-deploy` with the name of your desired provider.
-
-#### Build the provider and install the plugin
-
-   ```bash
-   $ make build install
-   ```
-   
-This will:
-
-1. Create the SDK codegen binary and place it in a `./bin` folder (gitignored)
-2. Create the provider binary and place it in the `./bin` folder (gitignored)
-3. Generate the dotnet, Go, Node, and Python SDKs and place them in the `./sdk` folder
-4. Install the provider on your machine.
-
-#### Test against the example
-   
-```bash
-$ cd examples/simple
-$ yarn link @pulumi/auto-deploy
-$ yarn install
-$ pulumi stack init test
-$ pulumi up
 ```
 
-Now that you have completed all of the above steps, you have a working provider that generates a random string for you.
+## Installing
 
-#### A brief repository overview
+This package is available in many languages in the standard packaging formats.
 
-You now have:
+### Node.js (Java/TypeScript)
 
-1. A `provider/` folder containing the building and implementation logic
-    1. `cmd/pulumi-resource-auto-deploy/main.go` - holds the provider's sample implementation logic.
-2. `deployment-templates` - a set of files to help you around deployment and publication
-3. `sdk` - holds the generated code libraries created by `pulumi-gen-auto-deploy/main.go`
-4. `examples` a folder of Pulumi programs to try locally and/or use in CI.
-5. A `Makefile` and this `README`.
+To use from JavaScript or TypeScript in Node.js, install using either `npm`:
 
-#### Additional Details
+    $ npm install @pulumi/auto-deploy
 
-This repository depends on the pulumi-go-provider library. For more details on building providers, please check
-the [Pulumi Go Provider docs](https://github.com/pulumi/pulumi-go-provider).
+or `yarn`:
 
-### Build Examples
+    $ yarn add @pulumi/auto-deploy
 
-Create an example program using the resources defined in your provider, and place it in the `examples/` folder.
+### Python
 
-You can now repeat the steps for [build, install, and test](#test-against-the-example).
+To use from Python, install using `pip`:
 
-## Configuring CI and releases
+    $ pip install pulumi-auto-deploy
 
-1. Follow the instructions laid out in the [deployment templates](./deployment-templates/README-DEPLOYMENT.md).
+### Go
 
-## References
+To use from Go, use `go get` to grab the latest version of the library
 
-Other resources/examples for implementing providers:
-* [Pulumi Command provider](https://github.com/pulumi/pulumi-command/blob/master/provider/pkg/provider/provider.go)
-* [Pulumi Go Provider repository](https://github.com/pulumi/pulumi-go-provider)
+    $ go get github.com/pulumi/pulumi-auto-deploy/sdk/go
+
+### .NET
+
+To use from .NET, install using `dotnet add package`:
+
+    $ dotnet add package Pulumi.AutoDeploy
