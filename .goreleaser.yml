@@ -22,7 +22,7 @@ builds:
       - linux
     ldflags:
       # The line below MUST align with the module in current provider/go.mod
-      - -X github.com/pulumi/pauto-deploy/provider/pkg/version.Version={{.Tag }}
+      - -X main.Version={{.Tag }}
     main: ./cmd/pulumi-resource-auto-deploy/
 changelog:
   skip: true

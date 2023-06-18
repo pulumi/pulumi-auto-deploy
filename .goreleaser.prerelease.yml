@@ -21,7 +21,7 @@ builds:
       - windows
       - linux
     ldflags:
-      - -X github.com/pulumi/pulumi-auto-deploy/provider/pkg/version.Version={{.Tag}}
+      - -X main.Version={{.Tag}}
     main: ./cmd/pulumi-resource-auto-deploy/
 changelog:
   skip: true
