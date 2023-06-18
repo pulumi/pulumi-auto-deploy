@@ -43,7 +43,7 @@ jobs:
       matrix:
         dotnetversion: [ 3.1.301 ]
         goversion: [ 1.19.x ]
-        language: [ nodejs, python, dotnet, go, java ]
+        language: [ nodejs, python, dotnet, go ]
         nodeversion: [ 14.x ]
         pythonversion: [ 3.7 ]
         javaversion: [ 11 ]
@@ -159,7 +159,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        language: [nodejs, java, yaml, go, dotnet, python]
+        language: [nodejs, yaml, go, dotnet, python]
 
         dotnetversion: [3.1.301]
         goversion: [1.19.x]
