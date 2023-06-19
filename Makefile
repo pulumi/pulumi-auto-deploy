@@ -10,17 +10,23 @@ PROVIDER        := pulumi-resource-${PACK}
 VERSION         ?= $(shell pulumictl get version)
 PROVIDER_PATH   := provider
 VERSION_PATH     := ${PROVIDER_PATH}/cmd/main.Version
+SCHEMA_PATH      := ${PROVIDER_PATH}/cmd/${PROVIDER}/schema.json
 
 GOPATH			:= $(shell go env GOPATH)
 
 WORKING_DIR     := $(shell pwd)
 TESTPARALLELISM := 4
 
+gen_schema:
+	pulumi package get-schema ./bin/pulumi-resource-auto-deploy > $(SCHEMA_PATH)
+
 ensure::
 	cd provider && go mod tidy -compat=1.17
 	cd sdk && go mod tidy -compat=1.17
 
-provider::
+provider: build_provider gen_schema
+
+build_provider::
 	(cd provider && go build -o $(WORKING_DIR)/bin/${PROVIDER} -ldflags "-X main.Version=${VERSION}" $(PROJECT)/${PROVIDER_PATH}/cmd/$(PROVIDER))
 
 provider_debug::

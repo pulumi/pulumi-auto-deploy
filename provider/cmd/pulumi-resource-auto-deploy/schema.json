@@ -1,0 +1,85 @@
+{
+  "name": "auto-deploy",
+  "version": "0.0.2-alpha.1687134169+a17e1f34.dirty",
+  "meta": {
+    "moduleFormat": "(.*)"
+  },
+  "config": {},
+  "provider": {
+    "type": "object"
+  },
+  "resources": {
+    "auto-deploy:index:AutoDeployer": {
+      "description": "Automatically trigger downstream updates on dependent stacks via Pulumi Deployments.\nAutoDeployer requires that stacks have Deployment Settings configured.",
+      "properties": {
+        "downstreamRefs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "A list of `AutoDeployer.DownstreamRef` indicating which stacks should\nautomatically be updated via Pulumi Deployments when this stack is successfully updated."
+        },
+        "downstreamWebhooks": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "A list of webhook URLs configured on this stack to trigger downstream deployments."
+        },
+        "organization": {
+          "type": "string",
+          "description": "The organization name for the AutoDeployer stack."
+        },
+        "project": {
+          "type": "string",
+          "description": "The project name for the AutoDeployer stack."
+        },
+        "ref": {
+          "type": "string",
+          "description": "The output reference that can be passed to another AutoDeployer's downstreamRefs list\nto configure depedent updates."
+        },
+        "stack": {
+          "type": "string",
+          "description": "The stack name for this AutoDeployer."
+        }
+      },
+      "type": "object",
+      "required": [
+        "downstreamRefs",
+        "downstreamWebhooks",
+        "organization",
+        "project",
+        "ref",
+        "stack"
+      ],
+      "inputProperties": {
+        "downstreamRefs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "A list of `AutoDeployer.DownstreamRef` indicating which stacks should\nautomatically be updated via Pulumi Deployments when this stack is successfully updated."
+        },
+        "organization": {
+          "type": "string",
+          "description": "The organization name for the AutoDeployer stack."
+        },
+        "project": {
+          "type": "string",
+          "description": "The project name for the AutoDeployer stack."
+        },
+        "stack": {
+          "type": "string",
+          "description": "The stack name for this AutoDeployer."
+        }
+      },
+      "requiredInputs": [
+        "downstreamRefs",
+        "organization",
+        "project",
+        "stack"
+      ],
+      "isComponent": true
+    }
+  }
+}
