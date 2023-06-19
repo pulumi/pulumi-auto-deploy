@@ -1,4 +1,4 @@
-module github.com/pulumi/pulumi-auto-deploy/sdk/v3
+module github.com/pulumi/pulumi-auto-deploy/sdk
 
 go 1.17
 
