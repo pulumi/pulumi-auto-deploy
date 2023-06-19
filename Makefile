@@ -17,8 +17,9 @@ GOPATH			:= $(shell go env GOPATH)
 WORKING_DIR     := $(shell pwd)
 TESTPARALLELISM := 4
 
+# note sure why the `mv schema.json.new` portion is required but it definitely is, maybe some race condition accessing this file? 
 gen_schema:
-	pulumi package get-schema ./bin/pulumi-resource-auto-deploy > $(SCHEMA_PATH)
+	pulumi package get-schema ./bin/pulumi-resource-auto-deploy > $(SCHEMA_PATH) && jq -r 'del(.version)' $(SCHEMA_PATH) > $(SCHEMA_PATH).new && mv $(SCHEMA_PATH).new $(SCHEMA_PATH)
 
 ensure::
 	cd provider && go mod tidy -compat=1.17
