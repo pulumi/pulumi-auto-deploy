@@ -52,7 +52,7 @@ type AutoDeployerOutput struct {
 	Project      pulumi.StringInput `pulumi:"project"`
 	Stack        pulumi.StringInput `pulumi:"stack"`
 	// Outputs
-	DownstreamRefs     pulumi.StringArrayOutput `pulumi:"downstreamRefs"`
+	DownstreamRefs     []pulumi.StringInput     `pulumi:"downstreamRefs"`
 	Ref                pulumi.StringOutput      `pulumi:"ref"`
 	DownstreamWebhooks pulumi.StringArrayOutput `pulumi:"downstreamWebhooks"`
 }
@@ -65,7 +65,6 @@ func (r *AutoDeployer) Construct(ctx *pulumi.Context, name, typ string, args Aut
 	}
 
 	downstreamWebhooks := []pulumi.StringOutput{}
-	downstreamRefs := []pulumi.StringOutput{}
 
 	for i, d := range args.DownstreamRefs {
 		wh, err := pcloud.NewWebhook(ctx, fmt.Sprintf("%s-%d", name, i), &pcloud.WebhookArgs{
@@ -81,14 +80,13 @@ func (r *AutoDeployer) Construct(ctx *pulumi.Context, name, typ string, args Aut
 		if err != nil {
 			return nil, err
 		}
-		downstreamRefs = append(downstreamRefs, d.ToStringOutput())
 		downstreamWebhooks = append(downstreamWebhooks, wh.Name.Elem().ToStringOutput())
 	}
 
 	comp.Organization = args.Organization
 	comp.Project = args.Project
 	comp.Stack = args.Stack
-	comp.DownstreamRefs = pulumi.ToStringArrayOutput(downstreamRefs)
+	comp.DownstreamRefs = args.DownstreamRefs
 	comp.Ref = pulumi.Sprintf("%s/%s", args.Project, args.Stack)
 	comp.DownstreamWebhooks = pulumi.ToStringArrayOutput(downstreamWebhooks)
 
