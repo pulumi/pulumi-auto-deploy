@@ -1,3 +1,4 @@
+permissions: write-all # Equivalent to default permissions plus id-token: write
 name: Build and run tests
 on:
   push:
@@ -18,7 +19,6 @@ on:
 
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
   PULUMI_BACKEND_URL: https://api.pulumi-staging.io
   # Required to properly write "go mod edit -replace=.." when running go examples
   PULUMI_GO_DEP_ROOT: ${{ github.workspace }}/..
@@ -31,6 +31,11 @@ env:
 
   PULUMI_TEST_OWNER: service-provider-test-org
   PULUMI_TEST_USE_SERVICE: true
+  ESC_ACTION_OIDC_AUTH: true
+  ESC_ACTION_OIDC_ORGANIZATION: pulumi
+  ESC_ACTION_OIDC_REQUESTED_TOKEN_TYPE: urn:pulumi:token-type:access_token:organization
+  ESC_ACTION_ENVIRONMENT: imports/github-secrets
+  ESC_ACTION_EXPORT_ENVIRONMENT_VARIABLES: PULUMI_ACCESS_TOKEN
 
 jobs:
   build_sdks:
@@ -48,6 +53,9 @@ jobs:
         pythonversion: [ 3.11 ]
         javaversion: [ 11 ]
     steps:
+      - name: Fetch secrets from ESC
+        id: esc-secrets
+        uses: pulumi/esc-action@v1
       - name: Checkout Repo
         uses: actions/checkout@v3
       - name: Checkout Scripts Repo
@@ -97,8 +105,7 @@ jobs:
           name: pulumi-${{ env.PROVIDER }}
           path: ${{ github.workspace }}/bin
       - name: Restore binary perms
-        run: find ${{ github.workspace }} -name "pulumi-*-${{ env.PROVIDER }}" -print
-          -exec chmod +x {} \;
+        run: find ${{ github.workspace }} -name "pulumi-*-${{ env.PROVIDER }}" -print -exec chmod +x {} \;
       - name: Generate SDK
         run: make ${{ matrix.language }}_sdk
       - name: Check worktree clean
@@ -118,6 +125,9 @@ jobs:
       matrix:
         goversion: [1.22.x]
     steps:
+      - name: Fetch secrets from ESC
+        id: esc-secrets
+        uses: pulumi/esc-action@v1
       - name: Checkout Repo
         uses: actions/checkout@v3
         with:
@@ -167,6 +177,9 @@ jobs:
         pythonversion: [3.11]
         javaversion: [11]
     steps:
+      - name: Fetch secrets from ESC
+        id: esc-secrets
+        uses: pulumi/esc-action@v1
       - name: Checkout Repo
         uses: actions/checkout@v3
       - name: Checkout Scripts Repo
@@ -206,8 +219,7 @@ jobs:
           name: pulumi-${{ env.PROVIDER }}
           path: ${{ github.workspace }}/bin
       - name: Restore binary perms
-        run: find ${{ github.workspace }} -name "pulumi-*-${{ env.PROVIDER }}" -print
-          -exec chmod +x {} \;
+        run: find ${{ github.workspace }} -name "pulumi-*-${{ env.PROVIDER }}" -print -exec chmod +x {} \;
       - name: Download SDK
         if: ${{ matrix.language != 'yaml' }}
         uses: actions/download-artifact@v4
@@ -220,7 +232,7 @@ jobs:
       - name: Update path
         run: echo "${{ github.workspace }}/bin" >> $GITHUB_PATH
       - name: Install Node deps
-        run:  yarn global add typescript
+        run: yarn global add typescript
       - run: dotnet nuget add source ${{ github.workspace }}/nuget
       - name: Install Python deps
         run: |-

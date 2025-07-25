@@ -1,3 +1,10 @@
+permissions: write-all # Equivalent to default permissions plus id-token: write
+env:
+  ESC_ACTION_OIDC_AUTH: true
+  ESC_ACTION_OIDC_ORGANIZATION: pulumi
+  ESC_ACTION_OIDC_REQUESTED_TOKEN_TYPE: urn:pulumi:token-type:access_token:organization
+  ESC_ACTION_ENVIRONMENT: imports/github-secrets
+  ESC_ACTION_EXPORT_ENVIRONMENT_VARIABLES: false
 name: New Issues to Triage
 
 on:
@@ -10,9 +17,12 @@ jobs:
         name: New Issue to Triage
         # Based on https://docs.github.com/en/issues/trying-out-the-new-projects-experience/automating-projects#example-workflow-authenticating-with-a-personal-access-token
         steps:
+            - name: Fetch secrets from ESC
+              id: esc-secrets
+              uses: pulumi/esc-action@v1
             - name: Get project data
               env:
-                  GITHUB_TOKEN: ${{ secrets.TRIAGE_WORKFLOW_TOKEN }}
+                  GITHUB_TOKEN: ${{ steps.esc-secrets.outputs.TRIAGE_WORKFLOW_TOKEN }}
                   ORGANIZATION: pulumi
                   PROJECT_NUMBER: 33
               run: |
@@ -37,7 +47,7 @@ jobs:
                   echo 'TODO_OPTION_ID='$(jq '.data.organization.projectNext.fields.nodes[] | select(.name== "Status") |.settings | fromjson.options[] | select(.name=="Todo") |.id' project_data.json) >> $GITHUB_ENV
             - name: Add issue to project
               env:
-                  GITHUB_TOKEN: ${{ secrets.TRIAGE_WORKFLOW_TOKEN }}
+                  GITHUB_TOKEN: ${{ steps.esc-secrets.outputs.TRIAGE_WORKFLOW_TOKEN }}
                   ISSUE_ID: ${{ github.event.issue.node_id }}
               run: |
                   item_id="$( gh api graphql -f query='
