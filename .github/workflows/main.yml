@@ -83,7 +83,7 @@ jobs:
         distribution: 'adopt' # could also be 'temurin'
         java-version: ${{matrix.javaversion}}
     - name: Download provider binaries
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: ${{ env.PROVIDER }}-provider.tar.gz
         path: ${{ github.workspace }}/bin
@@ -101,7 +101,7 @@ jobs:
       run: tar -zcf sdk/${{ matrix.language }}.tar.gz -C sdk/${{ matrix.language }}
         .
     - name: Upload artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: ${{ matrix.language  }}-sdk.tar.gz
         path: ${{ github.workspace}}/sdk/${{ matrix.language }}.tar.gz
@@ -149,7 +149,7 @@ jobs:
       run: tar -zcf ${{ github.workspace }}/bin/provider.tar.gz -C ${{ github.workspace
         }}/bin/ pulumi-resource-${{ env.PROVIDER }}
     - name: Upload artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: ${{ env.PROVIDER }}-provider.tar.gz
         path: ${{ github.workspace }}/bin/provider.tar.gz
@@ -249,21 +249,21 @@ jobs:
         distribution: 'adopt' # could also be 'temurin'
         java-version: ${{matrix.javaversion}}
     - name: Download python SDK
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: python-sdk.tar.gz
         path: ${{ github.workspace}}/sdk/
     - name: Uncompress python SDK
       run: tar -zxf ${{github.workspace}}/sdk/python.tar.gz -C ${{github.workspace}}/sdk/python
     - name: Download dotnet SDK
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: dotnet-sdk.tar.gz
         path: ${{ github.workspace}}/sdk/
     - name: Uncompress dotnet SDK
       run: tar -zxf ${{github.workspace}}/sdk/dotnet.tar.gz -C ${{github.workspace}}/sdk/dotnet
     - name: Download nodejs SDK
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: nodejs-sdk.tar.gz
         path: ${{ github.workspace}}/sdk/
@@ -326,7 +326,7 @@ jobs:
         distribution: 'adopt' # could also be 'temurin'
         java-version: ${{matrix.javaversion}}
     - name: Download provider binaries
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: ${{ env.PROVIDER }}-provider.tar.gz
         path: ${{ github.workspace }}/bin
@@ -337,7 +337,7 @@ jobs:
     - run: dotnet nuget add source ${{ github.workspace }}/nuget
     - name: Download SDK
       if: ${{ matrix.language != 'yaml' }}
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: ${{ matrix.language }}-sdk.tar.gz
         path: ${{ github.workspace}}/sdk/
