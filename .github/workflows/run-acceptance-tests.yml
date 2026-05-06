@@ -41,11 +41,11 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        dotnetversion: [ 3.1.301 ]
-        goversion: [ 1.19.x ]
+        dotnetversion: [ 8.0.x ]
+        goversion: [ 1.22.x ]
         language: [ nodejs, python, dotnet, go ]
-        nodeversion: [ 14.x ]
-        pythonversion: [ 3.7 ]
+        nodeversion: [ 20.x ]
+        pythonversion: [ 3.11 ]
         javaversion: [ 11 ]
     steps:
       - name: Checkout Repo
@@ -116,7 +116,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        goversion: [1.19.x]
+        goversion: [1.22.x]
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v3
@@ -161,10 +161,10 @@ jobs:
       matrix:
         language: [nodejs, yaml, go, dotnet, python]
 
-        dotnetversion: [3.1.301]
-        goversion: [1.19.x]
-        nodeversion: [14.x]
-        pythonversion: [3.7]
+        dotnetversion: [8.0.x]
+        goversion: [1.22.x]
+        nodeversion: [20.x]
+        pythonversion: [3.11]
         javaversion: [11]
     steps:
       - name: Checkout Repo
