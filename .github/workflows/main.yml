@@ -83,7 +83,7 @@ jobs:
         distribution: 'adopt' # could also be 'temurin'
         java-version: ${{matrix.javaversion}}
     - name: Download provider binaries
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: ${{ env.PROVIDER }}-provider.tar.gz
         path: ${{ github.workspace }}/bin
@@ -101,18 +101,18 @@ jobs:
       run: tar -zcf sdk/${{ matrix.language }}.tar.gz -C sdk/${{ matrix.language }}
         .
     - name: Upload artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: ${{ matrix.language  }}-sdk.tar.gz
         path: ${{ github.workspace}}/sdk/${{ matrix.language }}.tar.gz
     strategy:
       fail-fast: true
       matrix:
-        dotnetversion: [3.1.301]
-        goversion: [1.19.x]
+        dotnetversion: [8.0.x]
+        goversion: [1.22.x]
         language: [nodejs, python, dotnet, go]
-        nodeversion: [14.x]
-        pythonversion: ["3.7"]
+        nodeversion: [20.x]
+        pythonversion: ["3.11"]
         javaversion: ["11"]
   prerequisites:
     name: prerequisites
@@ -149,14 +149,14 @@ jobs:
       run: tar -zcf ${{ github.workspace }}/bin/provider.tar.gz -C ${{ github.workspace
         }}/bin/ pulumi-resource-${{ env.PROVIDER }}
     - name: Upload artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: ${{ env.PROVIDER }}-provider.tar.gz
         path: ${{ github.workspace }}/bin/provider.tar.gz
     strategy:
       fail-fast: true
       matrix:
-        goversion: [1.19.x]
+        goversion: [1.22.x]
   publish:
     name: publish
     needs: test
@@ -204,7 +204,7 @@ jobs:
       fail-fast: true
       matrix:
         goversion:
-        - 1.19.x
+        - 1.22.x
   publish_sdk:
     name: publish_sdk
     needs: publish
@@ -249,21 +249,21 @@ jobs:
         distribution: 'adopt' # could also be 'temurin'
         java-version: ${{matrix.javaversion}}
     - name: Download python SDK
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: python-sdk.tar.gz
         path: ${{ github.workspace}}/sdk/
     - name: Uncompress python SDK
       run: tar -zxf ${{github.workspace}}/sdk/python.tar.gz -C ${{github.workspace}}/sdk/python
     - name: Download dotnet SDK
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: dotnet-sdk.tar.gz
         path: ${{ github.workspace}}/sdk/
     - name: Uncompress dotnet SDK
       run: tar -zxf ${{github.workspace}}/sdk/dotnet.tar.gz -C ${{github.workspace}}/sdk/dotnet
     - name: Download nodejs SDK
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: nodejs-sdk.tar.gz
         path: ${{ github.workspace}}/sdk/
@@ -277,10 +277,10 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        dotnetversion: [3.1.301]
-        goversion: [1.19.x]
-        nodeversion: [14.x]
-        pythonversion: ["3.7"]
+        dotnetversion: [8.0.x]
+        goversion: [1.22.x]
+        nodeversion: [20.x]
+        pythonversion: ["3.11"]
         javaversion: ["11"]
   test:
     name: test
@@ -326,7 +326,7 @@ jobs:
         distribution: 'adopt' # could also be 'temurin'
         java-version: ${{matrix.javaversion}}
     - name: Download provider binaries
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: ${{ env.PROVIDER }}-provider.tar.gz
         path: ${{ github.workspace }}/bin
@@ -337,7 +337,7 @@ jobs:
     - run: dotnet nuget add source ${{ github.workspace }}/nuget
     - name: Download SDK
       if: ${{ matrix.language != 'yaml' }}
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: ${{ matrix.language }}-sdk.tar.gz
         path: ${{ github.workspace}}/sdk/
@@ -368,10 +368,10 @@ jobs:
       matrix:
         language: [nodejs, python, dotnet, go, yaml, dotnet]
 
-        dotnetversion: [3.1.301]
-        goversion: [1.19.x]
-        nodeversion: [14.x]
-        pythonversion: ["3.7"]
+        dotnetversion: [8.0.x]
+        goversion: [1.22.x]
+        nodeversion: [20.x]
+        pythonversion: ["3.11"]
         javaversion: ["11"]
 name: main
 "on":

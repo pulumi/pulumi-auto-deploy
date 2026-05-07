@@ -27,28 +27,28 @@ export class AutoDeployer extends pulumi.ComponentResource {
      * A list of `AutoDeployer.DownstreamRef` indicating which stacks should
      * automatically be updated via Pulumi Deployments when this stack is successfully updated.
      */
-    public readonly downstreamRefs!: pulumi.Output<string[]>;
+    declare public readonly downstreamRefs: pulumi.Output<string[]>;
     /**
      * A list of webhook URLs configured on this stack to trigger downstream deployments.
      */
-    public /*out*/ readonly downstreamWebhooks!: pulumi.Output<string[]>;
+    declare public /*out*/ readonly downstreamWebhooks: pulumi.Output<string[]>;
     /**
      * The organization name for the AutoDeployer stack.
      */
-    public readonly organization!: pulumi.Output<string>;
+    declare public readonly organization: pulumi.Output<string>;
     /**
      * The project name for the AutoDeployer stack.
      */
-    public readonly project!: pulumi.Output<string>;
+    declare public readonly project: pulumi.Output<string>;
     /**
      * The output reference that can be passed to another AutoDeployer's downstreamRefs list
      * to configure depedent updates.
      */
-    public /*out*/ readonly ref!: pulumi.Output<string>;
+    declare public /*out*/ readonly ref: pulumi.Output<string>;
     /**
      * The stack name for this AutoDeployer.
      */
-    public readonly stack!: pulumi.Output<string>;
+    declare public readonly stack: pulumi.Output<string>;
 
     /**
      * Create a AutoDeployer resource with the given unique name, arguments, and options.
@@ -61,22 +61,22 @@ export class AutoDeployer extends pulumi.ComponentResource {
         let resourceInputs: pulumi.Inputs = {};
         opts = opts || {};
         if (!opts.id) {
-            if ((!args || args.downstreamRefs === undefined) && !opts.urn) {
+            if (args?.downstreamRefs === undefined && !opts.urn) {
                 throw new Error("Missing required property 'downstreamRefs'");
             }
-            if ((!args || args.organization === undefined) && !opts.urn) {
+            if (args?.organization === undefined && !opts.urn) {
                 throw new Error("Missing required property 'organization'");
             }
-            if ((!args || args.project === undefined) && !opts.urn) {
+            if (args?.project === undefined && !opts.urn) {
                 throw new Error("Missing required property 'project'");
             }
-            if ((!args || args.stack === undefined) && !opts.urn) {
+            if (args?.stack === undefined && !opts.urn) {
                 throw new Error("Missing required property 'stack'");
             }
-            resourceInputs["downstreamRefs"] = args ? args.downstreamRefs : undefined;
-            resourceInputs["organization"] = args ? args.organization : undefined;
-            resourceInputs["project"] = args ? args.project : undefined;
-            resourceInputs["stack"] = args ? args.stack : undefined;
+            resourceInputs["downstreamRefs"] = args?.downstreamRefs;
+            resourceInputs["organization"] = args?.organization;
+            resourceInputs["project"] = args?.project;
+            resourceInputs["stack"] = args?.stack;
             resourceInputs["downstreamWebhooks"] = undefined /*out*/;
             resourceInputs["ref"] = undefined /*out*/;
         } else {

@@ -8,6 +8,7 @@ import (
 	"reflect"
 
 	"errors"
+	"example.com/pulumi-auto-deploy/sdk/go/auto-deploy/internal"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
 
@@ -51,6 +52,7 @@ func NewAutoDeployer(ctx *pulumi.Context,
 	if args.Stack == nil {
 		return nil, errors.New("invalid value for required argument 'Stack'")
 	}
+	opts = internal.PkgResourceDefaultOpts(opts)
 	var resource AutoDeployer
 	err := ctx.RegisterRemoteComponentResource("auto-deploy:index:AutoDeployer", name, args, &resource, opts...)
 	if err != nil {
