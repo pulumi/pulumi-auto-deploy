@@ -1,7 +1,7 @@
 # Pulumi Auto Deploy
 
-> [!WARNING]
-> **This package is deprecated and no longer maintained.** To orchestrate deployments across dependent stacks, use [Pulumi Delivery](https://www.pulumi.com/product/delivery/) instead.
+> [!NOTE]
+> **[Pulumi Delivery](https://www.pulumi.com/product/delivery/) is now the recommended way to orchestrate related stacks!** It picks up where this package left off, and this package is no longer actively developed.
 
 [![Slack](https://www.pulumi.com/images/docs/badges/slack.svg)](https://slack.pulumi.com)
 [![NPM version](https://badge.fury.io/js/%40pulumi%2Fauto-deploy.svg)](https://www.npmjs.com/package/@pulumi/auto-deploy)
