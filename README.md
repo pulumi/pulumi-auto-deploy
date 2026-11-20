@@ -1,5 +1,8 @@
 # Pulumi Auto Deploy
 
+> [!WARNING]
+> **This package is deprecated and no longer maintained.** To orchestrate deployments across dependent stacks, use [Pulumi Delivery](https://www.pulumi.com/product/delivery/) instead.
+
 [![Slack](https://www.pulumi.com/images/docs/badges/slack.svg)](https://slack.pulumi.com)
 [![NPM version](https://badge.fury.io/js/%40pulumi%2Fauto-deploy.svg)](https://www.npmjs.com/package/@pulumi/auto-deploy)
 [![Python version](https://badge.fury.io/py/pulumi-auto-deploy.svg)](https://pypi.org/project/pulumi-auto-deploy)
