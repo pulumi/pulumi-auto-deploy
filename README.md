@@ -1,3 +1,6 @@
+> [!NOTE]
+> **[Pulumi Delivery](https://www.pulumi.com/product/delivery/) is now the recommended way to orchestrate related stacks.** This component is no longer maintained.
+
 # Pulumi Auto Deploy
 
 [![Slack](https://www.pulumi.com/images/docs/badges/slack.svg)](https://slack.pulumi.com)
